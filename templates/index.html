@@ -1,0 +1,1116 @@
+
+
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#071b2b">
+<title>Accident Alert System</title>
+
+<style>
+:root {
+    --bg: #07131f;
+    --p: #102638;
+    --cyan: #35d9ef;
+    --txt: #eef8ff;
+    --muted: #a9c0cf;
+    --red: #ff667d;
+    --green: #3ddc97;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: linear-gradient(145deg, #06111b, #0b2638);
+    color: var(--txt);
+    font: 16px/1.45 system-ui, sans-serif;
+}
+
+header {
+    padding: 20px;
+    background: #071b2b;
+    border-bottom: 1px solid #214255;
+    position: sticky;
+    top: 0;
+    z-index: 3;
+}
+
+h1 {
+    font-size: 20px;
+    margin: 0;
+}
+
+header p, .muted {
+    color: var(--muted);
+}
+
+header p {
+    margin: 3px 0;
+    font-size: 13px;
+}
+
+.logo {
+    display: inline-grid;
+    place-items: center;
+    background: var(--cyan);
+    color: #06202b;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    font-weight: 900;
+    font-size: 24px;
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+nav {
+    display: flex;
+    gap: 7px;
+    overflow-x: auto;
+    padding: 10px;
+    background: #091b29;
+    position: sticky;
+    top: 80px;
+    z-index: 2;
+}
+
+button {
+    cursor: pointer;
+    font: inherit;
+    border-radius: 12px;
+    padding: 11px 13px;
+    font-weight: 750;
+    border: 1px solid #29485b;
+    background: #102638;
+    color: var(--muted);
+}
+
+nav button {
+    flex: 1;
+    min-width: max-content;
+}
+
+nav button.active,
+.primary {
+    background: var(--cyan);
+    color: #06202b;
+    border-color: var(--cyan);
+}
+
+main {
+    max-width: 720px;
+    margin: auto;
+    padding: 14px;
+    padding-bottom: 40px;
+}
+
+.view {
+    display: none;
+}
+
+.view.active {
+    display: block;
+}
+
+.card {
+    background: linear-gradient(150deg, #102638, #0d2232);
+    border: 1px solid #234357;
+    border-radius: 17px;
+    padding: 16px;
+    margin-bottom: 13px;
+}
+
+.card h2 {
+    font-size: 17px;
+    margin: 0 0 10px;
+}
+
+.small {
+    font-size: 13px;
+}
+
+.status {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.dot {
+    width: 12px;
+    height: 12px;
+    background: var(--green);
+    border-radius: 50%;
+}
+
+.status strong {
+    font-size: 20px;
+}
+
+.pill {
+    margin-left: auto;
+    background: #183f4c;
+    color: var(--cyan);
+    padding: 4px 8px;
+    border-radius: 99px;
+    font-size: 12px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.metric {
+    background: #0a1d2b;
+    padding: 12px;
+    border-radius: 12px;
+}
+
+.metric b {
+    display: block;
+    margin-top: 4px;
+}
+
+.primary, .danger, .secondary {
+    width: 100%;
+}
+
+.primary {
+    border: 0;
+}
+
+.danger {
+    background: var(--red);
+    color: #26060c;
+    border: 0;
+}
+
+.secondary {
+    background: #1a3a4f;
+    color: var(--txt);
+}
+
+.sos {
+    display: block;
+    margin: 14px auto;
+    width: 112px;
+    height: 112px;
+    border-radius: 50%;
+    background: var(--red);
+    border: 7px solid #ff9aaa;
+    color: #26060c;
+    font-size: 22px;
+    font-weight: 900;
+}
+
+.center {
+    text-align: center;
+}
+
+.hidden {
+    display: none !important;
+}
+
+label {
+    display: block;
+    color: var(--muted);
+    font-size: 13px;
+    margin: 10px 0 5px;
+}
+
+input, select {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #31566b;
+    background: #071a27;
+    color: var(--txt);
+    font: inherit;
+}
+
+.row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.row > * {
+    flex: 1;
+}
+
+.contact, .event {
+    padding: 12px 0;
+    border-bottom: 1px solid #244255;
+}
+
+.alert {
+    background: #3a1823;
+    border-color: #8e3447;
+}
+
+footer {
+    text-align: center;
+    color: #83a1b4;
+    font-size: 12px;
+    padding: 18px;
+}
+
+@media (max-width: 480px) {
+    header {
+        padding: 14px;
+    }
+
+    main {
+        padding: 10px;
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div>
+        <span class="logo">+</span>
+        <span style="display:inline-block; vertical-align:middle">
+            <h1>Accident Alert System</h1>
+            <p>ESP32 companion app · prototype</p>
+        </span>
+    </div>
+</header>
+
+<nav aria-label="Main navigation">
+    <button class="active" data-view="home">Dashboard</button>
+    <button data-view="contacts">Emergency Contacts</button>
+    <button data-view="accidentPage">Accident Alert</button>
+    <button data-view="health">Health SOS</button>
+    <button data-view="manualSos">Manual SOS</button>
+    <button data-view="history">Alert History</button>
+    <button data-view="gps">GPS Status</button>
+    <button data-view="settings">Settings</button>
+</nav>
+
+<main>
+
+    <!-- DASHBOARD PAGE -->
+    <section id="home" class="view active">
+
+        <div class="card">
+            <div class="status">
+                <span class="dot" id="dot"></span>
+                <div>
+                    <div class="muted small">SYSTEM STATUS</div>
+                    <strong id="status">SAFE</strong>
+                </div>
+                <span class="pill">DEMO MODE</span>
+            </div>
+            <p class="muted small" id="detail">
+                No event active. Hardware is not connected.
+            </p>
+        </div>
+
+        <div class="grid">
+            <div class="card metric">
+                <span class="muted small">GPS</span>
+                <b>Sample coordinates</b>
+            </div>
+
+            <div class="card metric">
+                <span class="muted small">SMS / GSM</span>
+                <b>Not connected</b>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Quick Overview</h2>
+            <p class="muted small">
+                Use the navigation bar to open each feature on its own page.
+            </p>
+
+            <div class="grid">
+                <div class="metric">
+                    <span class="muted small">Emergency contacts</span>
+                    <b id="contactCount">0 saved</b>
+                </div>
+
+                <div class="metric">
+                    <span class="muted small">Recorded events</span>
+                    <b id="eventCount">0 events</b>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Prototype Status</h2>
+            <p class="muted small">
+                This is a local demonstration. ESP32, GPS hardware, and SMS/GSM
+                are not connected. No real emergency messages are sent.
+            </p>
+        </div>
+
+    </section>
+
+    <!-- EMERGENCY CONTACTS PAGE -->
+    <section id="contacts" class="view">
+
+        <div class="card">
+            <h2>Emergency Contacts</h2>
+            <p class="muted small">
+                Saved in this browser. Nobody will be messaged.
+            </p>
+
+            <form id="form">
+                <label for="name">Contact Name</label>
+                <input id="name" required maxlength="50"
+                       placeholder="e.g. Parent">
+
+                <label for="number">Phone Number</label>
+                <input id="number" required type="tel" maxlength="20"
+                       placeholder="+91 98765 43210">
+
+                <button class="primary" style="margin-top:12px">
+                    Add Contact
+                </button>
+            </form>
+
+            <div id="contactsList"></div>
+        </div>
+
+        <div class="card">
+            <h2>Configured Police Contact</h2>
+            <p class="muted small">
+                This does not find the nearest police station automatically.
+                Enter only a verified number.
+            </p>
+
+            <label for="police">Police Number</label>
+            <input id="police" type="tel"
+                   placeholder="Verified number only">
+
+            <button class="secondary" id="savePolice" style="margin-top:10px">
+                Save Police Number
+            </button>
+
+            <p class="small muted" id="policeMsg"></p>
+        </div>
+
+    </section>
+
+    <!-- ACCIDENT ALERT PAGE -->
+    <section id="accidentPage" class="view">
+
+        <div class="card">
+            <h2>Accident Detection Test</h2>
+            <p class="muted small">
+                Start a countdown and practise cancelling a false alarm.
+                Demo only; no messages are sent.
+            </p>
+
+            <button class="danger" id="accident">
+                Simulate Accident
+            </button>
+
+            <div id="countbox" class="hidden alert card"
+                 style="margin-top:12px">
+
+                <div class="center">
+                    <div class="muted small" id="phaseLabel">
+                        CANCEL COUNTDOWN
+                    </div>
+
+                    <strong id="count" style="font-size:32px">15</strong>
+
+                    <p class="small" id="cycleInfo">
+                        Demo only. No messages are sent.
+                    </p>
+
+                    <p class="small" id="attemptStatus">
+                        Waiting to start.
+                    </p>
+                </div>
+
+                <button class="secondary" id="ack" style="margin-bottom:8px">
+                    Simulate Acknowledgement
+                </button>
+
+                <button class="secondary" id="fail" style="margin-bottom:8px">
+                    Simulate Send Failure
+                </button>
+
+                <button class="danger" id="cancel">
+                    I'm safe — stop all pending alerts
+                </button>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- HEALTH SOS PAGE -->
+    <section id="health" class="view">
+
+        <div class="card">
+            <h2>Health SOS Simulator</h2>
+
+            <p class="muted small">
+                Enter a sample heart rate to test the interface.
+                This is not a medical device and does not measure your pulse.
+            </p>
+
+            <label for="heartRate">Sample Heart Rate (BPM)</label>
+            <input id="heartRate" type="number"
+                   min="20" max="250" value="75">
+
+            <button class="primary" id="checkHealth" style="margin-top:12px">
+                Check Sample
+            </button>
+
+            <p class="muted small" id="healthResult">
+                No test run yet.
+            </p>
+        </div>
+
+    </section>
+
+    <!-- MANUAL SOS PAGE -->
+    <section id="manualSos" class="view">
+
+        <div class="card center">
+            <h2>Manual SOS</h2>
+
+            <p class="muted small">
+                Test the workflow. No real SMS will be sent.
+            </p>
+
+            <button class="sos" id="sos">SOS</button>
+
+            <p class="muted small" id="sosResult">
+                Ready for safe simulation.
+            </p>
+        </div>
+
+    </section>
+
+    <!-- GPS STATUS PAGE -->
+    <section id="gps" class="view">
+
+        <div class="card">
+            <h2>GPS Status</h2>
+
+            <p class="muted small">
+                Example coordinates only, not your live location.
+                GPS hardware is not connected.
+            </p>
+
+            <p><strong>11.4000, 77.7300</strong></p>
+
+            <button class="secondary" id="map">
+                Open Sample Location in Maps
+            </button>
+        </div>
+
+        <div class="card">
+            <h2>Connection Status</h2>
+            <p><span class="pill">GPS NEO-6M</span> Sample coordinates only</p>
+            <p><span class="pill">SIM800L / SMS</span> Not connected</p>
+        </div>
+
+    </section>
+
+    <!-- ALERT HISTORY PAGE -->
+    <section id="history" class="view">
+
+        <div class="card">
+            <div class="row">
+                <h2>Event History</h2>
+                <button id="clear" class="secondary">Clear</button>
+            </div>
+
+            <p class="muted small">
+                Stored locally in this browser.
+            </p>
+
+            <div id="historyList"></div>
+        </div>
+
+    </section>
+
+    <!-- SETTINGS PAGE -->
+    <section id="settings" class="view">
+
+        <div class="card">
+            <h2>Prototype Settings</h2>
+
+            <label for="seconds">Accident Countdown</label>
+            <select id="seconds">
+                <option value="10">10 seconds</option>
+                <option value="15">15 seconds</option>
+                <option value="20">20 seconds</option>
+                <option value="30">30 seconds</option>
+            </select>
+
+            <label for="rounds">Maximum Alert Rounds</label>
+            <select id="rounds">
+                <option value="1">1 round</option>
+                <option value="3">3 rounds</option>
+                <option value="5">5 rounds</option>
+                <option value="10">10 rounds</option>
+                <option value="0">Countless — no automatic round limit</option>
+            </select>
+
+            <label for="interval">Repeat Interval</label>
+            <select id="interval">
+                <option value="10">10 seconds</option>
+                <option value="30">30 seconds</option>
+                <option value="60">60 seconds</option>
+                <option value="120">120 seconds</option>
+                <option value="300">300 seconds</option>
+            </select>
+
+            <label for="policy">Repeat Policy</label>
+            <select id="policy">
+                <option value="failed_or_unacked">
+                    Retry failed or unacknowledged alerts
+                </option>
+            </select>
+
+            <label for="cancelPolicy">Cancellation Policy</label>
+            <select id="cancelPolicy">
+                <option value="immediate">
+                    Stop pending alerts immediately
+                </option>
+            </select>
+
+            <button class="primary" id="saveSettings" style="margin-top:12px">
+                Save Settings
+            </button>
+
+            <p class="muted small" id="settingsMsg"></p>
+
+            <p class="muted small">
+                Demo retries are simulated and do not send SMS.
+            </p>
+        </div>
+
+        <div class="card">
+            <h2>Hardware Requirements</h2>
+            <p class="muted small">
+                Planned parts: ESP32, MPU6050/GY-521, SW-420 vibration sensor,
+                GPS NEO-6M, compatible GSM module, LED, buzzer, cancel button,
+                suitable power supplies and wiring.
+            </p>
+
+            <p class="muted small">
+                Confirm the exact specifications of your components before
+                connecting power. Do not power a GSM module directly from the
+                ESP32 3.3 V pin unless its documentation explicitly permits it.
+            </p>
+        </div>
+
+        <div class="card">
+            <h2>Hardware Status</h2>
+            <p><span class="pill">ESP32</span> Not connected</p>
+            <p><span class="pill">MPU6050 / SW-420</span> Not connected</p>
+            <p><span class="pill">GPS NEO-6M</span> Sample coordinates only</p>
+            <p><span class="pill">SIM800L</span> SMS disabled</p>
+        </div>
+
+        <div class="card">
+            <h2>Safety Note</h2>
+            <p class="muted small">
+                This is a learning prototype. It does not detect real accidents,
+                read live GPS, connect to ESP32, or send SMS. Do not rely on it
+                for emergency response.
+            </p>
+        </div>
+
+    </section>
+
+</main>
+
+<footer>
+    Learning prototype · no real emergency messages sent
+</footer>
+
+<script>
+const $ = id => document.getElementById(id);
+
+function get(key, defaultValue) {
+    try {
+        return JSON.parse(localStorage.getItem(key)) ?? defaultValue;
+    } catch (error) {
+        return defaultValue;
+    }
+}
+
+function put(key, value) {
+    localStorage.setItem(key, JSON.stringify(value));
+}
+
+let contacts = get("aas_contacts", []);
+let events = get("aas_events", []);
+
+let settings = get("aas_settings", {
+    seconds: 15,
+    police: "",
+    rounds: 0,
+    interval: 30,
+    policy: "failed_or_unacked",
+    cancelPolicy: "immediate"
+});
+
+let countdownTimer = null;
+let repeatTimer = null;
+let countdownLeft = 0;
+let roundCount = 0;
+let alertPending = false;
+let sendFailed = false;
+
+// NAVIGATION: SHOW ONLY THE SELECTED PAGE
+document.querySelectorAll("nav button").forEach(button => {
+    button.addEventListener("click", () => {
+        document.querySelectorAll("nav button").forEach(item => {
+            item.classList.toggle("active", item === button);
+        });
+
+        document.querySelectorAll(".view").forEach(section => {
+            section.classList.toggle(
+                "active",
+                section.id === button.dataset.view
+            );
+        });
+
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+});
+
+// EVENT HISTORY
+function record(type, statusText) {
+    events.unshift({
+        type: type,
+        status: statusText,
+        time: new Date().toLocaleString()
+    });
+
+    events = events.slice(0, 100);
+    put("aas_events", events);
+    drawHistory();
+}
+
+// EMERGENCY CONTACTS
+function drawContacts() {
+    $("contactsList").innerHTML = "";
+
+    if ($("contactCount")) {
+        $("contactCount").textContent = contacts.length + " saved";
+    }
+
+    if (contacts.length === 0) {
+        $("contactsList").innerHTML =
+            '<p class="muted small">No contacts added yet.</p>';
+        return;
+    }
+
+    contacts.forEach((contact, index) => {
+        const div = document.createElement("div");
+        div.className = "contact";
+
+        const row = document.createElement("div");
+        row.className = "row";
+
+        const info = document.createElement("div");
+        const name = document.createElement("strong");
+        name.textContent = contact.name;
+
+        const number = document.createElement("div");
+        number.className = "muted small";
+        number.textContent = contact.number;
+
+        info.append(name, number);
+
+        const removeButton = document.createElement("button");
+        removeButton.className = "secondary";
+        removeButton.textContent = "Remove";
+
+        removeButton.onclick = () => {
+            contacts.splice(index, 1);
+            put("aas_contacts", contacts);
+            drawContacts();
+        };
+
+        row.append(info, removeButton);
+        div.append(row);
+        $("contactsList").append(div);
+    });
+}
+
+// ALERT HISTORY
+function drawHistory() {
+    $("historyList").innerHTML = "";
+
+    if ($("eventCount")) {
+        $("eventCount").textContent = events.length + " events";
+    }
+
+    if (events.length === 0) {
+        $("historyList").innerHTML =
+            '<p class="muted small">No events recorded yet.</p>';
+        return;
+    }
+
+    events.forEach(event => {
+        const div = document.createElement("div");
+        div.className = "event";
+
+        const title = document.createElement("strong");
+        title.textContent = event.type + " · " + event.status;
+
+        const time = document.createElement("p");
+        time.className = "muted small";
+        time.textContent = event.time;
+
+        div.append(title, time);
+        $("historyList").append(div);
+    });
+}
+
+// DASHBOARD SYSTEM STATUS
+function status(title, detail, isAlert = false) {
+    $("status").textContent = title;
+    $("detail").textContent = detail;
+
+    $("dot").style.background = isAlert
+        ? "var(--red)"
+        : "var(--green)";
+}
+
+// STOP TIMERS
+function clearTimers() {
+    if (countdownTimer) {
+        clearInterval(countdownTimer);
+        countdownTimer = null;
+    }
+
+    if (repeatTimer) {
+        clearTimeout(repeatTimer);
+        repeatTimer = null;
+    }
+}
+
+// MANUAL SOS SIMULATION
+function sos() {
+    if (alertPending) {
+        $("sosResult").textContent =
+            "An alert cycle is already active. Stop or acknowledge it first.";
+        return;
+    }
+
+    status(
+        "SOS REQUESTED",
+        "Manual SOS simulation recorded. No SMS sent.",
+        true
+    );
+
+    $("sosResult").textContent =
+        "SIMULATION ONLY — no SMS sent to contacts or police.";
+
+    record("Manual SOS", "Demo only — not sent");
+}
+
+// CANCEL OR ACKNOWLEDGE AN ALERT
+function stopAlert(reason) {
+    clearTimers();
+    alertPending = false;
+
+    $("countbox").classList.add("hidden");
+    $("ack").disabled = true;
+    $("fail").disabled = true;
+
+    if (reason === "cancel") {
+        status(
+            "SAFE",
+            "Cancelled. All pending demo retries stopped. No messages sent."
+        );
+
+        record("Alert cycle", "Cancelled — pending retries stopped");
+    } else if (reason === "ack") {
+        status(
+            "ACKNOWLEDGED",
+            "Demo acknowledgement received. Further retries stopped."
+        );
+
+        record("Alert cycle", "Acknowledged in demo — retries stopped");
+    } else {
+        status("SAFE", "Alert cycle ended. No messages sent.");
+        record("Alert cycle", "Stopped");
+    }
+}
+
+// SIMULATED ALERT RETRY
+function attemptRound() {
+    if (!alertPending) return;
+
+    roundCount++;
+    sendFailed = false;
+
+    $("phaseLabel").textContent = "DEMO ALERT ROUND " + roundCount;
+    $("count").textContent = "—";
+
+    $("cycleInfo").textContent =
+        "Next retry in " + settings.interval +
+        " seconds unless acknowledged or cancelled.";
+
+    $("attemptStatus").textContent =
+        "SIMULATED ATTEMPT — awaiting acknowledgement. No SMS is sent.";
+
+    record(
+        "Demo alert round " + roundCount,
+        "Simulated; awaiting acknowledgement"
+    );
+
+    const limit = Number(settings.rounds) || 0;
+
+    if (limit > 0 && roundCount >= limit) {
+        $("cycleInfo").textContent =
+            "Maximum round count reached. No more automatic retries.";
+
+        alertPending = false;
+        clearTimers();
+
+        status(
+            "DEMO ROUNDS COMPLETE",
+            "Round limit reached. No SMS sent.",
+            true
+        );
+
+        $("ack").disabled = true;
+        $("fail").disabled = true;
+
+        record("Alert cycle", "Maximum rounds reached — demo only");
+        return;
+    }
+
+    repeatTimer = setTimeout(() => {
+        if (!alertPending) return;
+
+        if (sendFailed) {
+            $("attemptStatus").textContent =
+                "Previous simulated send failed. Retrying now.";
+        } else {
+            $("attemptStatus").textContent =
+                "No acknowledgement received. Retrying now.";
+        }
+
+        attemptRound();
+    }, Math.max(10, Number(settings.interval) || 30) * 1000);
+}
+
+function startRepeatedAlerts() {
+    if (!alertPending) return;
+
+    roundCount = 0;
+    attemptRound();
+}
+
+// ACCIDENT COUNTDOWN
+function start() {
+    if (countdownTimer || alertPending) {
+        status(
+            "ALERT ALREADY ACTIVE",
+            "Cancel or acknowledge the active demo alert before starting another.",
+            true
+        );
+        return;
+    }
+
+    clearTimers();
+
+    countdownLeft = Number(settings.seconds) || 15;
+    roundCount = 0;
+    alertPending = false;
+
+    $("countbox").classList.remove("hidden");
+    $("phaseLabel").textContent = "CANCEL COUNTDOWN";
+    $("count").textContent = countdownLeft;
+
+    $("cycleInfo").textContent =
+        "Demo only. No messages are sent.";
+
+    $("attemptStatus").textContent =
+        "Cancel now if this is a false alarm.";
+
+    $("ack").disabled = true;
+    $("fail").disabled = true;
+
+    status(
+        "ACCIDENT DETECTED",
+        "Demo countdown active. Cancel if this is a false alarm.",
+        true
+    );
+
+    record("Accident simulation", "Countdown started");
+
+    countdownTimer = setInterval(() => {
+        countdownLeft--;
+        $("count").textContent = countdownLeft;
+
+        if (countdownLeft <= 0) {
+            clearInterval(countdownTimer);
+            countdownTimer = null;
+
+            alertPending = true;
+            $("ack").disabled = false;
+            $("fail").disabled = false;
+
+            status(
+                "DEMO ALERT ACTIVE",
+                "Repeated-alert workflow running. No SMS sent.",
+                true
+            );
+
+            startRepeatedAlerts();
+        }
+    }, 1000);
+}
+
+// BUTTON EVENTS
+$("sos").onclick = sos;
+$("accident").onclick = start;
+$("cancel").onclick = () => stopAlert("cancel");
+
+$("ack").onclick = () => {
+    if (alertPending) stopAlert("ack");
+};
+
+$("fail").onclick = () => {
+    if (alertPending) {
+        sendFailed = true;
+
+        $("attemptStatus").textContent =
+            "SIMULATED SEND FAILURE — retry remains queued for " +
+            settings.interval + " seconds. No SMS sent.";
+
+        record(
+            "Demo alert round " + roundCount,
+            "Simulated send failure — retry queued"
+        );
+    }
+};
+
+// ADD EMERGENCY CONTACT
+$("form").onsubmit = event => {
+    event.preventDefault();
+
+    contacts.push({
+        name: $("name").value.trim(),
+        number: $("number").value.trim()
+    });
+
+    put("aas_contacts", contacts);
+    event.target.reset();
+    drawContacts();
+};
+
+// SAVE POLICE CONTACT
+$("savePolice").onclick = () => {
+    settings.police = $("police").value.trim();
+    put("aas_settings", settings);
+
+    $("policeMsg").textContent = settings.police
+        ? "Saved locally. No message will be sent."
+        : "Police contact cleared.";
+};
+
+// HEALTH SOS SIMULATION
+$("checkHealth").onclick = () => {
+    const bpm = Number($("heartRate").value);
+
+    if (!Number.isFinite(bpm) || bpm < 20 || bpm > 250) {
+        $("healthResult").textContent =
+            "Enter a sample value from 20 to 250 BPM.";
+        return;
+    }
+
+    if (bpm < 50 || bpm > 120) {
+        $("healthResult").textContent =
+            "Demo threshold triggered at " + bpm +
+            " BPM. This is only a simulation, not a diagnosis.";
+
+        record(
+            "Health SOS test",
+            "Demo threshold triggered at " + bpm + " BPM"
+        );
+    } else {
+        $("healthResult").textContent =
+            "Sample " + bpm +
+            " BPM is within this demo range. This is not a medical assessment.";
+
+        record(
+            "Health SOS test",
+            "Demo sample " + bpm + " BPM — no alert triggered"
+        );
+    }
+};
+
+// SAVE SETTINGS
+$("saveSettings").onclick = () => {
+    settings.seconds = Number($("seconds").value);
+    settings.rounds = Number($("rounds").value);
+    settings.interval = Number($("interval").value);
+    settings.policy = $("policy").value;
+    settings.cancelPolicy = $("cancelPolicy").value;
+
+    put("aas_settings", settings);
+
+    $("settingsMsg").textContent =
+        "Settings saved: " + settings.seconds +
+        " second countdown; " +
+        (settings.rounds === 0
+            ? "Countless rounds"
+            : settings.rounds + " rounds") +
+        "; retry every " + settings.interval +
+        " seconds. Cancellation stops pending demo alerts.";
+};
+
+// CLEAR EVENT HISTORY
+$("clear").onclick = () => {
+    if (confirm("Clear all event history?")) {
+        events = [];
+        put("aas_events", events);
+        drawHistory();
+    }
+};
+
+// OPEN SAMPLE LOCATION
+$("map").onclick = () => {
+    window.open(
+        "https://maps.google.com/?q=11.4000,77.7300",
+        "_blank",
+        "noopener"
+    );
+};
+
+// LOAD SAVED SETTINGS
+$("seconds").value = String(settings.seconds || 15);
+$("rounds").value = String(settings.rounds ?? 0);
+$("interval").value = String(settings.interval || 30);
+$("policy").value = settings.policy || "failed_or_unacked";
+$("cancelPolicy").value = settings.cancelPolicy || "immediate";
+$("police").value = settings.police || "";
+
+// INITIAL DISPLAY
+drawContacts();
+drawHistory();
+</script>
+
+</body>
+</html>
